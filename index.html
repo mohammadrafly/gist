@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gist</title>
+  <!-- Include Tailwind CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Link your custom stylesheet -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <div id="map-container" onclick="placeMarker(event)">
+        <div id="map-image">
+            <img src="assets/img/map.png" id="map" alt="Map Image">
+            <div id="marker-container"></div>
+        </div>
+    </div>
+    <div id="list-container" class="w-1/4 p-4 hidden">
+        <h2 class="text-xl font-semibold mb-4">Level</h2>
+        <ul>
+            <li class="mb-2"><span class="square" style="background-color: #FD0003;"></span>Tidak Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #FC7103;"></span>Tidak Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #FDB802;"></span>Tidak Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #feff03;"></span>Tidak Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #d2fe69;"></span>Tidak Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #92ffb2;"></span>Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #04fefb;"></span>Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #3aacfb;"></span>Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #3b5ef8;"></span>Sangat Layak</li>
+            <li class="mb-2"><span class="square" style="background-color: #0004fe;"></span>Sangat Layak</li>
+        </ul>
+    </div>
+    <div id="button-container" class="text-center mt-4">
+        <button id="change-image-button" onclick="changeImage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Next
+        </button>
+    </div>
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+/* Center the map container */
+#map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Adjust the height as needed */
+    position: relative; /* Add relative positioning */
+  }
+
+  #map-image {
+    position: relative;
+    max-width: 100%;
+  }
+
+  .marker {
+    position: absolute;
+    width: 10px; /* Sesuaikan dengan ukuran yang Anda inginkan */
+    height: 10px; /* Sesuaikan dengan ukuran yang Anda inginkan */
+    background-color: blue; /* Sesuaikan dengan warna yang Anda inginkan */
+    border-radius: 50%; /* Membuat marker berbentuk lingkaran */
+    transform: translate(-50%, -50%); /* Pusatkan marker */
+  }
+  
+  img {
+    border: 2px solid black; /* Ganti dengan warna dan ketebalan stroke yang Anda inginkan */
+  }
+
+  .square {
+    display: inline-block;
+    width: 10px; /* Sesuaikan dengan ukuran yang Anda inginkan */
+    height: 10px; /* Sesuaikan dengan ukuran yang Anda inginkan */
+    margin-right: 8px; /* Jarak antara persegi dan teks */
+    vertical-align: middle; /* Menyelaraskan vertikal dengan teks */
+    border-radius: 2px; /* Sudut melengkung */
+}

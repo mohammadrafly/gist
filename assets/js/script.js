@@ -6,7 +6,7 @@ const changeImageButton = document.getElementById('change-image-button');
 let currentMarker = null;
 let currentImageIndex = 0;
 
-const images = ['assets/img/map.png', 'assets/img/map2.jpg'];
+const images = ['assets/img/map.png', 'assets/img/map2.png'];
 
 function placeMarker(event) {
   const mapRect = mapImage.getBoundingClientRect();
@@ -18,8 +18,9 @@ function placeMarker(event) {
       markerContainer.removeChild(currentMarker);
     }
 
-    const marker = document.createElement('div');
+    const marker = document.createElement('img');
     marker.className = 'marker';
+    marker.src = 'assets/img/placeholder.png';
     
     // Set posisi marker relatif terhadap gambar
     marker.style.left = `${x}px`;

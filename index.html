@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gist</title>
-  <!-- Include Tailwind CSS via CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- Link your custom stylesheet -->
-  <link rel="stylesheet" href="assets/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gist</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="assets/dist/output.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <div id="map-container" onclick="placeMarker(event)">
-        <div id="map-image">
-            <img class="img-class" src="assets/img/map.png" id="map" alt="Map Image">
-            <div id="marker-container"></div>
+    <div class="flex items-center justify-center h-screen">
+        <div id="map" class="w-[750px] h-[750px] border-2 border-gray-500">Test</div>
+    </div>
+    <div class="flex items-center justify-center">
+        <div class="m-5">
+            <div id="buttonContainer" class="py-5">
+                <button id="nextButton" class="bg-blue-500 text-white px-4 py-2 rounded relative">
+                    <span id="buttonContent">Proses</span>
+                    <span id="loadingSpinner" class="hidden">
+                        <div class="animate-pulse">Loading...</div>
+                    </span>
+                </button>
+            </div>
+        
+            <div id="resultDisplay" class="hidden bottom-4 left-4 bg-white text-gray-800 p-4 rounded"></div>
         </div>
     </div>
-    <div id="list-container" class="w-1/4 p-4 hidden">
-        <h2 class="text-xl font-semibold mb-4">Level</h2>
-        <ul>
-            <li class="mb-2"><span class="square" style="background-color: #FD0003;"></span>Tidak Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #FC7103;"></span>Tidak Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #FDB802;"></span>Tidak Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #feff03;"></span>Tidak Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #d2fe69;"></span>Tidak Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #92ffb2;"></span>Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #04fefb;"></span>Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #3aacfb;"></span>Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #3b5ef8;"></span>Sangat Layak</li>
-            <li class="mb-2"><span class="square" style="background-color: #0004fe;"></span>Sangat Layak</li>
-        </ul>
-    </div>
-    <div id="button-container" class="text-center mt-4">
-        <button id="change-image-button" onclick="changeImage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Next
-        </button>
-    </div>
+
+    <script src="https://unpkg.com/@turf/turf@7.0.2"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-geometryutil@0.10.3/src/leaflet.geometryutil.min.js"></script>
+    <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    <script src="assets/js/kalkulasi.js"></script>
+    <script src="assets/js/kmeans.js"></script>
+    <script src="geojson/batas.js"></script>
+    <script src="geojson/minimarket.js"></script>
+    <script src="geojson/jalan.js"></script>
+    <script src="geojson/pemukiman.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>

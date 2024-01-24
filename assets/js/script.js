@@ -1,54 +1,181 @@
-const mapContainer = document.getElementById('map-container');
-const markerContainer = document.getElementById('marker-container');
-const mapImage = document.getElementById('map');
-const changeImageButton = document.getElementById('change-image-button');
+    var map = L.map('map').setView([-8.1805, 113.6856], 13);
 
-let currentMarker = null;
-let currentImageIndex = 0;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-const images = ['assets/img/map.png', 'assets/img/map2.png'];
-
-function placeMarker(event) {
-  const mapRect = mapImage.getBoundingClientRect();
-  const x = event.clientX - mapRect.left;
-  const y = event.clientY - mapRect.top;
-
-  if (x >= 0 && x <= mapRect.width && y >= 0 && y <= mapRect.height) {
-    if (currentMarker) {
-      markerContainer.removeChild(currentMarker);
-    }
-
-    const marker = document.createElement('img');
-    marker.className = 'marker';
-    marker.src = 'assets/img/placeholder.png';
+    var kecamatanKaliwatesBoundary = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "coordinates": batasKaliwates,
+                    "type": "Polygon"
+                }
+            }
+        ]
+    };
     
-    // Set posisi marker relatif terhadap gambar
-    marker.style.left = `${x}px`;
-    marker.style.top = `${y}px`;
+    var jalanFeature = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "MultiLineString",
+            "coordinates": roadFeatures
+        }
+    };
 
-    markerContainer.appendChild(marker);
+    var minimarketArea = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": minimarketFeatures
+        }
+    };
 
-    currentMarker = marker;
-  }
+    var permukimanArea = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": permukimanFeatures
+        }
+    };
 
-  // Enable the "Next" button whenever a marker is placed
-  changeImageButton.disabled = false;
-}
+    var jalanLayer = L.geoJSON(jalanFeature, {
+        style: {
+            color: 'blue',
+            weight: 4
+        }
+    }).addTo(map);
 
+    var minimarketAreaLayer = L.geoJSON(minimarketArea, {
+        style: {
+            fillColor: 'orange',
+            color: 'orange',
+            weight: 2
+        }
+    }).addTo(map);
 
-function changeImage() {
-  if (currentImageIndex < images.length - 1) {
-    currentImageIndex++;
-    mapImage.src = images[currentImageIndex];
-  } else {
-    var listContainer = document.getElementById("list-container");
-    if (listContainer.style.display === "none" || listContainer.style.display === "") {
-      listContainer.style.display = "block";
-    } else {
-      listContainer.style.display = "none";
+    var permukimanLayer = L.geoJSON(permukimanArea, {
+        style: {
+            color: 'purple',
+            weight: 1
+        }
+    }).addTo(map);
+
+    var kecamatanKaliwatesLayer = L.geoJSON(kecamatanKaliwatesBoundary, {
+        style: {
+            fillColor: 'gray',
+            color: 'gray',
+            weight: 2
+        }
+    }).addTo(map);
+
+    kecamatanKaliwatesLayer.on('mouseout', function (e) {
+        kecamatanKaliwatesLayer.resetStyle(e.target);
+    });
+
+    var markers = [];
+    var markerCounter = 0;
+    
+    map.on('click', function(e) {
+      if (isPointInsideBoundary(e.latlng, kecamatanKaliwatesBoundary)) {
+        markerCounter++;
+        var markerLabel = String.fromCharCode(65 + markers.length); 
+        var marker = L.marker(e.latlng).addTo(map);
+        markers.push(marker);
+    
+        var popupContent = `<p>Titik lokasi ${markerLabel}: ${e.latlng.toString()}</p>`;
+        marker.bindPopup(popupContent).openPopup();
+      } else {
+        alert('Maaf titik yang anda pilih berada diluar kecamatan kaliwates');
+      }
+    });    
+
+    var nextButton = document.getElementById('nextButton');
+    nextButton.addEventListener('click', onNextButtonClick);
+
+    var loadingSpinner = document.getElementById('loadingSpinner');
+    var buttonContent = document.getElementById('buttonContent');
+    var resultDisplay = document.getElementById('resultDisplay');
+
+    function isPointInsideBoundary(point, boundary) {
+      var polygon = turf.polygon(boundary.features[0].geometry.coordinates);
+      var pt = turf.point([point.lng, point.lat]);
+    
+      return turf.booleanPointInPolygon(pt, polygon);
     }
-    changeImageButton.disabled = true;
-  }
-}
 
-changeImageButton.addEventListener('click', changeImage);
+    function onNextButtonClick() {
+      buttonContent.classList.add('hidden');
+      loadingSpinner.classList.remove('hidden');
+    
+      if (markers.length > 0) {
+        var results = [];
+    
+        markers.forEach(function(marker, index) {
+          var markerLatLng = marker.getLatLng();
+          var distanceToRoad = getDistanceToRoad(markerLatLng, jalanFeature.geometry.coordinates);
+          var value = calculateValue(distanceToRoad);
+    
+          var distanceToMinimarket = getDistanceToMinimarket(markerLatLng, minimarketArea.geometry.coordinates);
+          var valueMinimarket = calculateValueForMinimarket(distanceToMinimarket);
+    
+          var distanceToPermukiman = getDistanceToPermukiman(markerLatLng, permukimanArea.geometry.coordinates);
+          var valuePermukiman = calculateValueForPemukiman(distanceToPermukiman);
+    
+          var jumlahGedung = 500;
+          if (valuePermukiman <= 10) {
+            for (var i = 10; i > valuePermukiman; i--) {
+              jumlahGedung -= 50;
+            }
+          }
+    
+          results.push({
+            distanceToMinimarket: distanceToMinimarket.toFixed(2),
+            valueMinimarket: valueMinimarket,
+            distanceToRoad: distanceToRoad.toFixed(2),
+            value: value,
+            distanceToPermukiman: distanceToPermukiman.toFixed(2),
+            valuePermukiman: valuePermukiman,
+            jumlahGedung: jumlahGedung
+          });
+        });
+    
+        const dataMatrix = results.map(result => [result.valueMinimarket, result.value, result.valuePermukiman]);
+    
+        console.log(dataMatrix)
+        const k = 3;
+        const clusters = kmeans(dataMatrix, k);
+    
+        console.log(clusters);
+        results.forEach((result, index) => {
+          const clusterIndex = clusters.assignments[index];
+          result.cluster = clusterIndex;
+          console.log(clusterIndex)
+        });
+    
+        setTimeout(function () {
+          loadingSpinner.classList.add('hidden');
+          buttonContent.classList.remove('hidden');
+    
+          results.forEach(function(result, index) {
+            var markerLabel = String.fromCharCode(65 + index); 
+            resultDisplay.innerHTML += `
+              <p>Titik ${markerLabel} (Cluster ${result.cluster}):</p>
+              <p>Jarak dengan inimarket: ${result.distanceToMinimarket} Meter (Value: ${result.valueMinimarket} </p>
+              <p>Jarak dengan jalan: ${result.distanceToRoad} Meter (Value: ${result.value})</p>
+              <p>Jumlah Gedung: ${result.jumlahGedung} Gedung/500m (Value: ${result.valuePermukiman})</p>
+            `;
+          });
+    
+          resultDisplay.classList.remove('hidden');
+        }, 2000);
+      } else {
+        loadingSpinner.classList.add('hidden');
+        buttonContent.classList.remove('hidden');
+        alert('No markers selected. Please click on the map to set markers.');
+      }
+    }    

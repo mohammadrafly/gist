@@ -80,8 +80,9 @@ function calculatePolygonCentroid(polygon) {
 function calculateValueForMinimarket(distance) {
     var metersPerValue = 500;
     var value = Math.ceil(distance / metersPerValue);
-    return Math.min(Math.max(11 - value, 1), 10);
+    return Math.min(value, 10);
 }
+
 function calculateValueForPemukiman(distance) {
     var distanceValueMapping = [
         { distance: 50, value: 10 },

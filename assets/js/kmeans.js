@@ -26,7 +26,6 @@ function kmeans(data, k) {
   
           const totalPoints = assignedPoints.length;
   
-          // Hitung rata-rata dan tentukan kriteria ketidaklayakan, layak, dan sangat layak
           const meanCoords = meanPoint.map(coord => coord / totalPoints);
           const criteria = determineCriteria(meanCoords);
   

@@ -50,21 +50,6 @@
         }
     }).addTo(map);
 
-    var minimarketAreaLayer = L.geoJSON(minimarketArea, {
-        style: {
-            fillColor: 'orange',
-            color: 'orange',
-            weight: 2
-        }
-    }).addTo(map);
-
-    var permukimanLayer = L.geoJSON(permukimanArea, {
-        style: {
-            color: 'purple',
-            weight: 1
-        }
-    }).addTo(map);
-
     var kecamatanKaliwatesLayer = L.geoJSON(kecamatanKaliwatesBoundary, {
         style: {
             fillColor: 'gray',
@@ -162,13 +147,18 @@
           buttonContent.classList.remove('hidden');
     
           results.forEach(function(result, index) {
-            var markerLabel = String.fromCharCode(65 + index); 
-            resultDisplay.innerHTML += `
-              <p>Titik ${markerLabel} (Cluster ${result.cluster}):</p>
-              <p>Jarak dengan inimarket: ${result.distanceToMinimarket} Meter (Value: ${result.valueMinimarket} </p>
-              <p>Jarak dengan jalan: ${result.distanceToRoad} Meter (Value: ${result.value})</p>
-              <p>Jumlah Gedung: ${result.jumlahGedung} Gedung/500m (Value: ${result.valuePermukiman})</p>
-            `;
+              var markerLabel = String.fromCharCode(65 + index);
+              var clusterSum = result.valueMinimarket + result.value + result.valuePermukiman; // Sum of all variable values
+              var clusterLabel = (clusterSum >= 15) ? 2 : 1; // Determine the cluster label based on the sum
+          
+              resultDisplay.innerHTML += `
+                <div class="m-5">
+                  <p>Titik ${markerLabel} (Cluster ${clusterLabel}): Jumlah Value ${clusterSum / 10 * 100}% ${(clusterSum >= 15) ? 'Area Layak' : 'Area Tidak Layak'}</p>
+                  <p>Jarak dengan minimarket: ${result.distanceToMinimarket} Meter (Value: ${result.valueMinimarket / 10 * 100}%) </p>
+                  <p>Jarak dengan jalan: ${result.distanceToRoad} Meter (Value: ${result.value / 10 * 100}%)</p>
+                  <p>Jumlah Gedung: ${result.jumlahGedung} Gedung/500m (Value: ${result.valuePermukiman / 10 * 100}%)</p>
+                </div>
+              `;
           });
     
           resultDisplay.classList.remove('hidden');
